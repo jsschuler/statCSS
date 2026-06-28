@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>When More Data Make the Wrong Model More Certain — CSSSA 2025</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reset.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/theme/white.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+
+  <style>
+    /* ── Typography ─────────────────────────────────────────── */
+    .reveal {
+      font-family: "Georgia", serif;
+    }
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      text-transform: none;
+      color: #222;
+    }
+    /* h3 is the standard slide heading */
+    .reveal h3 {
+      font-size: 1.1em;
+      margin-bottom: 0.4em;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.15em;
+    }
+    .reveal section { text-align: left; }
+
+    /* Body text: 0.72em of Reveal's base keeps things from overflowing */
+    .body { font-size: 0.72em; line-height: 1.6; }
+    .body li { margin-bottom: 0.3em; }
+    .body ul  { margin-left: 1.1em; }
+
+    /* ── KaTeX equation blocks ─────────────────────────────── */
+    .eq-display {
+      margin: 0.5em 0;
+      text-align: center;
+    }
+    /* KaTeX inline: just use \(...\) inside .body text */
+
+    /* ── Callout boxes ─────────────────────────────────────── */
+    .note {
+      border-left: 3px solid #b08000;
+      background: #fffbee;
+      padding: 0.4em 0.8em;
+      margin-top: 0.55em;
+      font-size: 0.72em;
+      line-height: 1.5;
+    }
+    .warn {
+      border-left: 3px solid #cc331a;
+      background: #fff0ee;
+      padding: 0.4em 0.8em;
+      margin-top: 0.55em;
+      font-size: 0.72em;
+      line-height: 1.5;
+    }
+
+    /* ── Two-column layout ─────────────────────────────────── */
+    .cols { display: flex; gap: 1.8em; align-items: flex-start; margin-top: 0.4em; }
+    .col  { flex: 1; min-width: 0; }
+
+    /* ── Param / comparison table ──────────────────────────── */
+    table.pt {
+      font-size: 0.68em;
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 0.4em;
+    }
+    table.pt th {
+      background: #e8eaf0;
+      padding: 5px 10px;
+      text-align: left;
+      font-family: "Helvetica Neue", sans-serif;
+    }
+    table.pt td { padding: 4px 10px; border-bottom: 1px solid #eee; }
+    table.pt tr:last-child td { border-bottom: none; }
+
+    /* ── Figure wrapper ────────────────────────────────────── */
+    .fig { text-align: center; margin-top: 0.3em; }
+    .fig img { max-width: 88%; max-height: 390px; }
+    .fig-cap {
+      font-size: 0.58em; color: #666; margin-top: 0.2em;
+      font-style: italic; line-height: 1.4;
+    }
+
+    /* ── Workflow diagram ──────────────────────────────────────
+         ALL sizes in px to avoid Reveal.js em-cascade.
+         Reveal's transform:scale() scales px values proportionally.
+    ────────────────────────────────────────────────────────── */
+    .wf-outer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 18px 0 8px;
+    }
+    .wf-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .wf-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100px;
+    }
+    .wf-box {
+      width: 92px;
+      min-height: 46px;
+      background: #e8ecf8;
+      border: 1.5px solid #999;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 11px;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.3;
+      padding: 4px 3px;
+      box-sizing: border-box;
+      word-break: break-word;
+    }
+    .wf-ann {
+      font-size: 9px;
+      color: #b07000;
+      font-family: "Courier New", monospace;
+      text-align: center;
+      margin-top: 4px;
+      line-height: 1.3;
+      min-height: 24px;
+    }
+    .wf-arr {
+      width: 20px;
+      padding-top: 12px;
+      font-size: 16px;
+      color: #888;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .wf-sub {
+      font-size: 10px;
+      color: #999;
+      font-style: italic;
+      margin-top: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Utility ───────────────────────────────────────────── */
+    .red  { color: #cc331a; }
+    .blue { color: #2673bf; }
+    .grn  { color: #2a8a40; }
+    .mono { font-family: "Courier New", monospace; font-size: 0.9em; }
+    .small { font-size: 0.65em; color: #666; }
+  </style>
+</head>
+
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ══════════════════════════════════════════════════════════
+     1. TITLE
+══════════════════════════════════════════════════════════════ -->
+<section style="text-align:center;">
+  <br>
+  <h2 style="font-size:1.15em; line-height:1.4;">
+    When More Data Make<br>the Wrong Model More Certain
+  </h2>
+  <p style="font-size:0.78em; color:#555; margin-top:0.5em;">
+    Network Dependence, Regularization, and Mean-Field Bias<br>
+    in Agent-Based SIR Models
+  </p>
+  <hr style="width:48%; margin:1em auto; border-color:#ccc;">
+  <p style="font-size:0.65em; color:#888;">CSSSA 2025 &nbsp;·&nbsp; [Author]</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     2. ODE SIR
+══════════════════════════════════════════════════════════════ -->
+<section>
+  <h3>The SIR Model — Mean-Field ODE</h3>
+
+  <div class="body">
+    <p>Three compartments: <strong>S</strong>usceptible,
+    <strong>I</strong>nfected, <strong>R</strong>ecovered.</p>
+  </div>
+
+  <div class="eq-display">
+    \[
+      \frac{dS}{dt} = -\beta_{\text{ODE}}\frac{SI}{N},
+      \qquad
+      \frac{dI}{dt} = \beta_{\text{ODE}}\frac{SI}{N} - \gamma I,
+      \qquad
+      \frac{dR}{dt} = \gamma I
+    \]
+  </div>
+
+  <div class="body" style="margin-top:0.3em;">
+    <ul>
+      <li>\(\beta_{\text{ODE}}\) — transmission rate (mass-action)</li>
+      <li>\(\gamma\) — recovery rate; mean infectious period \(= 1/\gamma\)</li>
+      <li>\(N = S + I + R\) — total population (constant)</li>
+    </ul>
+  </div>
+
+  <div class="note" style="margin-top:0.6em;">
+    This is the standard calibration target. Simple, tractable, widely used.
+    But it contains a hidden assumption about social structure.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     3. THE SOCIAL ASSUMPTION
+══════════════════════════════════════════════════════════════ -->
+<section>
+  <h3>The Hidden Social Assumption</h3>
+
+  <div class="body">
+    <p>Focus on the infection term:</p>
+  </div>
+
+  <div class="eq-display">
+    \[
+      \underbrace{\beta_{\text{ODE}} \frac{S \cdot I}{N}}_{\text{infection rate}}
+    \]
+  </div>
+
+  <div class="body">
+    <p>The product \(S \cdot I\) encodes <strong>uniform mixing</strong>:</p>
+    <ul>
+      <li>Every susceptible is equally likely to contact <em>any</em> infected agent</li>
+      <li>Social structure, geography, group membership — all ignored</li>
+      <li>Contact opportunities scale with the product of aggregate counts</li>
+    </ul>
+  </div>
+
+  <div class="warn">
+    <strong>The product \(S \cdot I\) is a social assumption, not algebra.</strong><br>
+    It is wrong wherever people mostly interact within social groups.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     4. NETWORK SIR
+══════════════════════════════════════════════════════════════ -->
+<section>
+  <h3>The Network SIR Model</h3>
+
+  <div class="body">
+    <p>Replace \(SI/N\) with an explicit contact network \(A\).
+    Agent \(i\) can only be infected by its neighbors \(\mathcal{N}(i)\).</p>
+  </div>
+
+  <div class="eq-display">
+    \[
+      P\!\bigl(i\ \text{infected in}\ [t,\,t{+}\Delta t]\bigr)
+      \;=\; 1 - \exp\!\Bigl(-\beta\,\Delta t
+        \sum_{j\,\in\,\mathcal{N}(i)}\mathbf{1}\{X_j(t)=I\}\Bigr)
+    \]
+  </div>
+
+  <div class="body" style="margin-top:0.2em;">
+    <ul>
+      <li>\(\beta\) — per-contact, per-infected-neighbor rate &nbsp;(<em>different scale from \(\beta_{\text{ODE}}\)</em>)</li>
+      <li>Aggregate incidence \(\propto E_{SI}(t)\): the number of susceptible–infected <em>edges</em>, not the product \(S \cdot I\)</li>
+    </ul>
+  </div>
+
+  <div class="note">
+    Derived from competing hazards of independent Poisson contact processes
+    (Kiss, Miller &amp; Simon 2017, Ch. 3).
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     5. β SCALING — NETWORK CARTOONS
+══════════════════════════════════════════════════════════════ -->
+<section>
+  <h3>Same Density, Different Structure — Different ODE Estimate</h3>
+
+  <div class="body" style="margin-bottom:0.3em;">
+    Under uniform mixing with mean degree \(\bar{d}\):
+    \(\;\beta_{\text{mf,true}} = \beta_{\text{true}} \times \bar{d} \approx 0.04 \times 37 \approx 1.47\)
+  </div>
+
+  <div class="fig">
+    <img src="../figures/fig_beta_networks.png" alt="Network cartoons: uniform vs community" />
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     6. COMMUNITY STRUCTURE & TWO-PHASE DYNAMICS (fig_02)
+══════════════════════════════════════════════════════════════ -->
+<section>
+  <h3>Community Structure Creates Two-Phase Dynamics</h3>
+
+  <div class="fig">
+    <img src="../figures/fig_02_network_vs_ode_incidence.png"
+         alt="Network data vs ODE fit" />
+    <div class="fig-cap">
+      Community-network data (bars): rapid within-group spread, then a slower second wave
+      as the epidemic crosses group boundaries. The ODE fit (red) compromises between the two phases.
+      The ODE at \(\beta_{\text{mf,true}}\) (dashed) peaks too early.
+    </div>
+  </div>
+
+  <div class="warn" style="margin-top:0.4em;">
+    No single \(\beta_{\text{ODE}}\) can reproduce the two-phase shape.
+    The fitted ODE lands on a <strong>pseudo-true \(\beta_{\text{ODE}}^*\)</strong>
+    that minimizes aggregate misfit — not the true transmission rate.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     7. GENERATIVE MODEL WORKFLOW (fragment build-up)
+══════════════════════════════════════════════════════════════ -->
+<section>
+  <h3>Putting It Together: A Generative Statistical Model</h3>
+
+  <div class="wf-outer">
+    <div class="wf-row">
+
+      <div class="wf-cell fragment fade-in-then-semi-out" data-fragment-index="1">
+        <div class="wf-box">Mechanism<br>(theory)</div>
+        <div class="wf-ann">SBM, η<br>community strength</div>
+      </div>
+
+      <div class="wf-arr fragment fade-in" data-fragment-index="2">→</div>
+
+      <div class="wf-cell fragment fade-in-then-semi-out" data-fragment-index="2">
+        <div class="wf-box">Network<br>ABM</div>
+        <div class="wf-ann">β = 0.04<br>per contact</div>
+      </div>
+
+      <div class="wf-arr fragment fade-in" data-fragment-index="3">→</div>
+
+      <div class="wf-cell fragment fade-in-then-semi-out" data-fragment-index="3">
+        <div class="wf-box">Latent<br>epidemic</div>
+        <div class="wf-ann">E_SI(t)<br>SI edges</div>
+      </div>
+
+      <div class="wf-arr fragment fade-in" data-fragment-index="4">→</div>
+
+      <div class="wf-cell fragment fade-in-then-semi-out" data-fragment-index="4">
+        <div class="wf-box">Observation<br>process</div>
+        <div class="wf-ann">Δt = 7 days<br>weekly totals</div>
+      </div>
+
+      <div class="wf-arr fragment fade-in" data-fragment-index="5">→</div>
+
+      <div class="wf-cell fragment fade-in-then-semi-out" data-fragment-index="5">
+        <div class="wf-box">Coarse<br>data</div>
+        <div class="wf-ann">Y₁,…,Y₂₁<br>no group info</div>
+      </div>
+
+      <div class="wf-arr fragment fade-in" data-fragment-index="6">→</div>
+
+      <div class="wf-cell fragment fade-in-then-semi-out" data-fragment-index="6">
+        <div class="wf-box">ODE<br>calibration</div>
+        <div class="wf-ann">β_ODE<br>mass-action</div>
+      </div>
+
+      <div class="wf-arr fragment fade-in" data-fragment-index="7">→</div>
+
+      <div class="wf-cell fragment fade-in" data-fragment-index="7">
+        <div class="wf-box">Posterior<br>+ criticism</div>
+        <div class="wf-ann">β* ≈ 1.13<br>bias = −23%</div>
+      </div>
+
+    </div>
+    <div class="wf-sub fragment fade-in" data-fragment-index="4">
+      ← coarsening hides network structure →
+    </div>
+  </div>
+
+  <div class="warn fragment fade-in" style="font-size:0.68em;" data-fragment-index="8">
+    Once community structure is aggregated away, no amount of additional
+    coarse data can recover it.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     8. RESULT 1: POSTERIOR BIAS (fig_03)
+══════════════════════════════════════════════════════════════ -->
+<section>
+  <h3>Result 1: The ODE Posterior Is Biased</h3>
+
+  <div class="fig">
+    <img src="../figures/fig_03_posterior_bias_single.png"
+         alt="Posterior bias" />
+    <div class="fig-cap">
+      <span class="blue">Blue</span>: ODE posterior fitted to uniform-network data —
+      correctly near \(\beta_{\text{mf,true}}\) (dashed).<br>
+      <span class="red">Red</span>: ODE posterior fitted to community-network data —
+      concentrated 23% below the reference.
+      Both posteriors are tight. The bias is misspecification, not uncertainty.
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     9. RESULT 2: MORE DATA (fig_04_slide)
+══════════════════════════════════════════════════════════════ -->
+<section>
+  <h3>Result 2: More Data at the Same Grain</h3>
+
+  <div class="fig">
+    <img src="../figures/fig_04_slide.png"
+         alt="More data: variance shrinks, bias remains" />
+    <div class="fig-cap">
+      Posteriors for \(R = 1, 5, 10, 20\) independent community-network outbreaks
+      (faint → dark red). 95% CI width annotated above each peak.
+      The peak does not move toward \(\beta_{\text{mf,true}}\) (dashed).
+    </div>
+  </div>
+
+  <div class="warn" style="font-size:0.68em; margin-top:0.3em;">
+    <strong>Variance shrinks fourfold. Bias is unchanged.</strong>
+    More data make the wrong model more certain.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     10. RESULT 3: REGULARIZATION PATH (fig_05)
+══════════════════════════════════════════════════════════════ -->
+<section>
+  <h3>Result 3: Bias Grows with Community Structure</h3>
+
+  <div class="fig">
+    <img src="../figures/fig_05_regularization_path_network_stats.png"
+         alt="Regularization path" />
+    <div class="fig-cap">
+      Varying \(\eta\) from 0 (Erdős–Rényi) to 3 (strong community structure).
+      Within-group edge share (green, left axis) and ODE bias (red, right axis)
+      both increase monotonically. At \(\eta=0\), bias \(\approx 0\); at \(\eta=3\), bias \(= -0.48\).
+    </div>
+  </div>
+
+  <div class="note" style="font-size:0.68em; margin-top:0.3em;">
+    The uniform-mixing ODE is the <strong>maximally regularized limit</strong>
+    (\(\eta \to 0\)) — not a neutral baseline, but the case where all
+    group distinctions have been shrunk to zero.
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     11. CONCLUSION
+══════════════════════════════════════════════════════════════ -->
+<section>
+  <h3>Conclusion</h3>
+
+  <div class="body">
+    <ul>
+      <li>The \(SI/N\) product term encodes <strong>uniform mixing</strong> —
+          a strong social assumption that fails under community structure</li>
+      <li>Fitting the ODE to community-network data produces a
+          <strong>biased posterior</strong> that absorbs group structure
+          into a lower effective rate</li>
+      <li>Collecting more data at the same coarse grain
+          <strong>sharpens the bias</strong> — variance shrinks, bias remains</li>
+      <li>ODE bias increases <strong>monotonically with \(\eta\)</strong>:
+          the stronger the community structure, the worse the misspecification</li>
+    </ul>
+  </div>
+
+  <div class="warn" style="margin-top:0.7em;">
+    Make social simulation empirically disciplined: determine
+    which mechanisms are needed, which can be regularized away,
+    and where a model's claims cease to be robust.
+  </div>
+
+  <p class="small" style="margin-top:0.6em;">
+    Kermack &amp; McKendrick (1927) &nbsp;·&nbsp;
+    Holland et al. (1983) &nbsp;·&nbsp;
+    Newman (2002) &nbsp;·&nbsp;
+    Kiss et al. (2017) &nbsp;·&nbsp;
+    McAllester (1999)
+  </p>
+</section>
+
+</div><!-- /.slides -->
+</div><!-- /.reveal -->
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.6.1/plugin/math/math.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    controls: true,
+    progress: true,
+    center: false,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    width: 960,
+    height: 620,
+    margin: 0.06,
+    plugins: [ RevealMath.KaTeX ],
+    math: {
+      katexScript:     'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
+      katexStylesheet: 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
+    },
+  });
+</script>
+</body>
+</html>

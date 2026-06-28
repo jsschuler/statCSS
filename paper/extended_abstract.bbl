@@ -1,0 +1,52 @@
+\begin{thebibliography}{7}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Epstein(2008)]{epstein2008}
+Joshua~M. Epstein.
+\newblock Why model?
+\newblock \emph{Journal of Artificial Societies and Social Simulation},
+  11\penalty0 (4):\penalty0 12, 2008.
+\newblock URL \url{https://www.jasss.org/11/4/12.html}.
+
+\bibitem[Holland et~al.(1983)Holland, Laskey, and Leinhardt]{holland1983}
+Paul~W. Holland, Kathryn~Blackmond Laskey, and Samuel Leinhardt.
+\newblock Stochastic blockmodels: First steps.
+\newblock \emph{Social Networks}, 5\penalty0 (2):\penalty0 109--137, 1983.
+\newblock \doi{10.1016/0378-8733(83)90021-7}.
+
+\bibitem[Keeling and Rohani(2008)]{keeling2008}
+Matt~J. Keeling and Pejman Rohani.
+\newblock \emph{Modeling Infectious Diseases in Humans and Animals}.
+\newblock Princeton University Press, 2008.
+
+\bibitem[Kermack and McKendrick(1927)]{kermack1927}
+W.~O. Kermack and A.~G. McKendrick.
+\newblock A contribution to the mathematical theory of epidemics.
+\newblock \emph{Proceedings of the Royal Society of London A}, 115\penalty0
+  (772):\penalty0 700--721, 1927.
+\newblock \doi{10.1098/rspa.1927.0118}.
+
+\bibitem[Kiss et~al.(2017)Kiss, Miller, and Simon]{kiss2017}
+Istv{\'a}n~Z. Kiss, Joel~C. Miller, and P{\'e}ter~L. Simon.
+\newblock \emph{Mathematics of Epidemics on Networks}, volume~46 of
+  \emph{Interdisciplinary Applied Mathematics}.
+\newblock Springer, 2017.
+\newblock \doi{10.1007/978-3-319-50806-1}.
+
+\bibitem[McAllester(1999)]{mcallester1999}
+David~A. McAllester.
+\newblock Some {PAC}-{B}ayesian theorems.
+\newblock \emph{Machine Learning}, 37\penalty0 (3):\penalty0 355--363, 1999.
+\newblock \doi{10.1023/A:1007618624809}.
+
+\bibitem[Newman(2002)]{newman2002}
+M.~E.~J. Newman.
+\newblock Spread of epidemic disease on networks.
+\newblock \emph{Physical Review E}, 66\penalty0 (1):\penalty0 016128, 2002.
+\newblock \doi{10.1103/PhysRevE.66.016128}.
+
+\end{thebibliography}

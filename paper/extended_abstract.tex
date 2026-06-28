@@ -1,0 +1,254 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{natbib}
+
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue}
+
+\onehalfspacing
+
+\title{\textbf{When More Data Make the Wrong Model More Certain}\\[0.4em]
+\large Network Dependence, Regularization, and Mean-Field Bias\\
+in Agent-Based SIR Models}
+
+\author{[Author]}
+
+\date{CSSSA 2025 Extended Abstract}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+Agent-based models can represent heterogeneous agents, local interaction, network
+structure, and path dependence---but fitting them to coarse aggregate data can
+produce biased parameter estimates that persist and sharpen as more data are
+collected at the same observational grain. We demonstrate this using SIR epidemic
+models \citep{kermack1927}. Data are generated from a network SIR process with
+known community structure. A mean-field ODE SIR is then calibrated to weekly
+aggregate incidence counts. The ODE posterior concentrates around a pseudo-true
+parameter that absorbs network structure into an effective aggregate rate,
+systematically understating the true mean-field equivalent by 23\% in our baseline
+experiment. Collecting more independent outbreaks at the same coarse grain narrows
+the posterior fourfold without reducing bias. We connect this result to
+regularization: the uniform-mixing ODE is the maximally regularized limit of the
+network model. As community structure strengthens (regularization weakens), ODE
+bias increases monotonically.
+\end{abstract}
+
+\section{The Problem}
+
+Agent-based modelers routinely simulate epidemic spread, opinion dynamics, and
+market behavior at the level of individual agents \citep{epstein2008}. The
+simulation produces rich internal trajectories: who interacted with whom, in what
+order, under what conditions. But the data available for calibration are almost
+always coarser. A modeler fitting an epidemic model to weekly case reports compares
+a fine-grained stochastic process to aggregate counts measured at a weekly clock.
+
+This mismatch creates a problem that is easy to overlook. When the model is
+calibrated to coarse data, estimated parameters may be fitting the observation
+process as much as the underlying mechanism. If the observation process discards
+information that the mechanism depends on, fitted parameters will not recover the
+true microscopic rates---no matter how much data are collected.
+
+\section{Contribution}
+
+We reframe agent-based models as generative statistical models with two components:
+\[
+\text{simulator} \;\to\; \text{latent social process} \;\to\; \text{observation process} \;\to\; \text{data.}
+\]
+The simulator encodes a theory of how agents interact. The observation process
+encodes how those interactions are measured---at what resolution, with what
+reporting rate, and with what aggregation structure. A simulation is not yet a
+statistical model until both components are specified.
+
+\section{The SIR Example and the Social Assumption}
+
+The standard mean-field ODE SIR model \citep{kermack1927, keeling2008} is:
+\[
+\frac{dS}{dt} = -\beta_{ODE}\frac{SI}{N}, \qquad
+\frac{dI}{dt} = \beta_{ODE}\frac{SI}{N} - \gamma I, \qquad
+\frac{dR}{dt} = \gamma I.
+\]
+The term $SI$ is often treated as algebra. It is not. It encodes a strong social
+assumption: susceptible-infected contact opportunities are proportional to the
+product of aggregate counts. This is uniform mixing. \emph{The product term is a
+social assumption.}
+
+\section{Network SIR and SI Edges}
+
+A network SIR model replaces uniform mixing with an explicit contact structure
+\citep{keeling2008, kiss2017}. For susceptible agent $i$ with neighbors
+$\mathcal{N}(i)$ in contact network $A$, the infection probability over a short
+interval follows from the competing-hazards structure of independent Poisson
+contact processes \citep[Ch.~3]{kiss2017}:
+\[
+P\!\bigl(i \text{ infected in } [t,\,t+\Delta t]\bigr)
+= 1 - \exp\!\Bigl(-\beta\,\Delta t \sum_{j \in \mathcal{N}(i)} \mathbf{1}\{X_j(t)=I\}\Bigr).
+\]
+Here $\beta$ is the per-contact, per-infected-neighbor transmission rate---not the
+same parameter as $\beta_{ODE}$. Aggregate incidence depends on $E_{SI}(t)$, the
+number of susceptible-infected edges \citep{newman2002}, not directly on the
+product $SI$.
+
+A critical point about scale: $\beta$ and $\beta_{ODE}$ are not directly
+comparable. Under \emph{uniform} mixing with mean degree $\bar{d}$, each
+susceptible has on average $\bar{d} \cdot I/N$ infected contacts, so the
+aggregate infection rate is $\beta \cdot \bar{d} \cdot SI/N$. An ODE fitted to
+data from such a network should therefore recover:
+\[
+\beta_{mf,true} = \beta \cdot \bar{d}.
+\]
+This is not the ``true parameter'' in a direct sense. It is a
+\emph{counterfactual reference}: the $\beta_{ODE}$ that an unbiased ODE
+calibration would recover from a network with the same mean degree $\bar{d}$ but
+no community structure (i.e.\ Erd\H{o}s--R\'enyi). We validate this reference
+empirically: fitting the ODE to data from an actual uniform network with mean
+degree $\bar{d} \approx 12$ recovers $\beta_{ODE}$ within 2\% of $\beta_{mf,true}$.
+
+Under community structure, the approximation $E_{SI} \approx c\,SI$ fails. The
+epidemic burns rapidly through the seed group, then stalls at group boundaries
+before spreading slowly across sparse between-group edges. This two-phase dynamics
+produces an aggregate incidence curve that no single-$\beta_{ODE}$ ODE can match
+exactly. The ODE instead concentrates its posterior around a pseudo-true
+$\beta_{ODE}^*$ that best approximates the overall pacing of the aggregate curve.
+The gap $\beta_{ODE}^* - \beta_{mf,true}$ is the bias attributable entirely to
+community structure.
+
+\section{Regularization and the Uniform Graph}
+
+We generate contact networks from a stochastic block model \citep{holland1983}:
+\[
+\operatorname{logit} P(A_{ij}=1) = \alpha + \eta\, B_{ij},
+\]
+where $B_{ij} = 1$ if agents $i,j$ share a group and $B_{ij} = -1/(K-1)$
+otherwise. The parameter $\eta$ controls community structure; $\alpha$ controls
+overall density. The regularization penalty is $\lambda\eta^2$.
+
+At $\eta = 0$, all dyads have equal edge probability $\sigma(\alpha)$: the graph
+is Erd\H{o}s--R\'enyi and mixing is uniform. The uniform graph is not the neutral
+case. It is the maximally regularized case: the network that remains when all
+group-based distinctions have been shrunk to zero. The standard ODE is
+correspondingly the maximally regularized aggregate limit. It is not what happens
+when an ABM gets large. It is what happens when the ABM gets large, coarse, and
+socially uniform.
+
+\section{Simulation Results}
+
+\paragraph{Setup.}
+We simulate $N=1000$ agents in $K=4$ equal groups. The community network uses
+$\alpha=-4.4$, $\eta=2.5$ (mean degree $\approx 37$, within-group edge share
+$\approx 0.89$). True parameters: $\beta = 0.04$~day$^{-1}$ (per contact),
+$\gamma = 0.10$~day$^{-1}$ (mean infectious period 10 days). The mean-field
+reference rate is $\beta_{mf,true} = \beta\bar{d} \approx 1.47$. We simulate
+150 days, observe weekly aggregate incidence (21 time points), and fit the ODE
+via grid posterior with $\gamma$ fixed:
+\[
+\log(1 + Y_k) \sim \mathcal{N}\!\bigl(\log(1+\hat{Y}_k),\,\sigma^2\bigr).
+\]
+
+\paragraph{Bias result.}
+The ODE posterior concentrates near $\beta_{ODE}^* \approx 1.13$, well below the
+counterfactual reference $\beta_{mf,true} \approx 1.47$---the value the ODE
+\emph{would} recover from a uniform network of the same density. The bias is
+$-0.33$, or 23\% of the reference. The community epidemic's two-phase shape
+(rapid within-group spread, slow between-group spread) cannot be reproduced by
+any single-$\beta_{ODE}$ ODE; the posterior instead concentrates on the
+$\beta_{ODE}$ that minimizes aggregate misfit. Aggregation can make the ODE look
+right while making its parameters wrong: the fitted epidemic curve tracks the
+weekly counts acceptably, but the posterior is centered on a value that has
+absorbed community structure into a lower effective rate.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.82\linewidth]{../figures/fig_03_posterior_bias_single.png}
+  \caption{ODE posterior under uniform-network data (blue) sits near its reference
+    $\beta_{mf,true}$; posterior under community-network data (red) concentrates
+    well to the left of its reference (dashed black line), demonstrating systematic
+    bias. Both posteriors are tight---the bias is not uncertainty, it is
+    misspecification.}
+  \label{fig:bias_single}
+\end{figure}
+
+\paragraph{More data, same grain.}
+We generate $R$ independent community-network outbreaks and pool their likelihoods.
+As $R$ increases from 1 to 20, the posterior 95\% credible interval width shrinks
+from 0.136 to 0.036---a fourfold reduction. The posterior MAP stays in the range
+$[1.11,\,1.22]$, always well below $\beta_{mf,true} \approx 1.47$.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.82\linewidth]{../figures/fig_04_more_data_shrinks_variance_not_bias.png}
+  \caption{Four stacked panels showing the ODE posterior for $\beta_{ODE}$ as
+    the number of independent community-network outbreaks increases ($R = 1, 5, 10,
+    20$, top to bottom). All panels share the same horizontal axis. The dotted
+    vertical line marks $\beta_{true} = 0.04$ (per-contact rate; a different
+    quantity than $\beta_{ODE}$). The dashed vertical line marks the counterfactual
+    reference $\beta_{mf,true} \approx 1.47$ (what an unbiased ODE would recover
+    from a uniform network of the same density). The 95\% credible interval width,
+    annotated in each panel, shrinks fourfold from $R=1$ to $R=20$; the posterior
+    mass does not move toward the reference. More data make the wrong model more certain.}
+  \label{fig:more_data}
+\end{figure}
+
+\medskip
+\noindent\textbf{More data at the same observational grain do not recover the
+missing mechanism. They estimate the wrong reduced model more precisely. Variance
+shrinks. Bias remains.}
+
+\paragraph{Regularization path.}
+Varying $\eta$ from 0 to 3 and pooling 20 independent outbreaks per level to
+obtain stable pseudo-true estimates, ODE bias increases strictly monotonically:
+$-0.044$ (9\% of reference) at $\eta=0$ and $-0.48$ (23\% of reference) at
+$\eta=3$. The relationship is convex: bias is modest for small $\eta$ and
+accelerates as community structure becomes strong. As community structure
+strengthens, the epidemic increasingly spreads in group-wise waves; the ODE
+compensates by fitting a lower effective transmission rate.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.82\linewidth]{../figures/fig_05_regularization_path_network_stats.png}
+  \caption{Regularization path. As community structure $\eta$ increases (green,
+    left axis), the within-group edge share rises from uniform mixing ($1/K = 0.25$)
+    toward 1. ODE posterior bias (red, right axis) decreases monotonically and
+    convexly. At $\eta = 0$ the network is approximately Erd\H{o}s--R\'enyi and
+    bias is near zero; at $\eta = 3$ bias reaches $-0.48$.}
+  \label{fig:reg_path}
+\end{figure}
+
+\section{Robustness and Model Criticism}
+
+This connects to PAC-Bayesian ideas \citep{mcallester1999}: a model must pay for
+how far it moves from prior plausible mechanisms in order to fit the data. More
+generally, regularization demands stability under modeling changes the theory
+regards as irrelevant. Findings that survive perturbations across network
+realizations, observation grains, and community structure strengths are the robust
+ones.
+
+A practical workflow follows: (1)~specify the latent process and observation
+process separately; (2)~compare richer simulations against their mean-field limits;
+(3)~penalize unnecessary heterogeneity in agents and network structure; (4)~vary
+observation grain and clock; (5)~examine posterior bias; (6)~run posterior
+predictive checks.
+
+\section{Conclusion}
+
+Fitting a mean-field ODE to community-network epidemic data produces systematically
+biased parameter estimates. More data at the same coarse grain sharpens the bias
+rather than correcting it. The analyst becomes more confident---but about the wrong
+model. The broader goal is to make social simulation empirically disciplined: not
+merely to generate plausible patterns, but to determine which mechanisms are
+needed, which can be regularized away, and where a model's claims cease to be
+robust.
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
