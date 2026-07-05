@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2026.1.26)  27 JUN 2026 20:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2026.1.26)  5 JUL 2026 13:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -405,24 +405,24 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 ) (./extended_abstract.aux)
 \openout1 = `extended_abstract.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 25.
+LaTeX Font Info:    ... okay on input line 25.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -458,20 +458,20 @@ LaTeX Font Info:    ... okay on input line 24.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Info: Redefining \microtypecontext on input line 24.
-Package microtype Info: Applying patch `item' on input line 24.
-Package microtype Info: Applying patch `toc' on input line 24.
-Package microtype Info: Applying patch `eqnum' on input line 24.
-Package microtype Info: Applying patch `footnote' on input line 24.
-Package microtype Info: Applying patch `verbatim' on input line 24.
-LaTeX Info: Redefining \microtypesetup on input line 24.
+LaTeX Info: Redefining \microtypecontext on input line 25.
+Package microtype Info: Applying patch `item' on input line 25.
+Package microtype Info: Applying patch `toc' on input line 25.
+Package microtype Info: Applying patch `eqnum' on input line 25.
+Package microtype Info: Applying patch `footnote' on input line 25.
+Package microtype Info: Applying patch `verbatim' on input line 25.
+LaTeX Info: Redefining \microtypesetup on input line 25.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 24.
+LaTeX Info: Redefining \showhyphens on input line 25.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -519,12 +519,12 @@ Package color Info: Driver file: pdftex.def on input line 149.
 
 (/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/tex/latex/graphics/ma
 thcolor.ltx))
-Package hyperref Info: Link coloring ON on input line 24.
+Package hyperref Info: Link coloring ON on input line 25.
  (./extended_abstract.out) (./extended_abstract.out)
 \@outlinefile=\write3
 \openout3 = `extended_abstract.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 27.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 28.
 
 
 (/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/tex/latex/amsfonts/um
@@ -535,7 +535,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 t-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 28.
 
 
 (/opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/tex/latex/amsfonts/um
@@ -555,41 +555,48 @@ p/pdftex.map}]
 [2]
 
 [3]
-<../figures/fig_03_posterior_bias_single.png, id=87, 677.53125pt x 406.51875pt>
+
+[4]
+<../figures/fig_03_posterior_bias_single.png, id=88, 677.53125pt x 406.51875pt>
 
 File: ../figures/fig_03_posterior_bias_single.png Graphic file (type png)
 <use ../figures/fig_03_posterior_bias_single.png>
 Package pdftex.def Info: ../figures/fig_03_posterior_bias_single.png  used on i
-nput line 171.
+nput line 231.
 (pdftex.def)             Requested size: 373.34943pt x 224.01399pt.
-<../figures/fig_04_more_data_shrinks_variance_not_bias.png, id=89, 677.53125pt 
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+<../figures/fig_04_more_data_shrinks_variance_not_bias.png, id=90, 677.53125pt 
 x 511.9125pt>
 File: ../figures/fig_04_more_data_shrinks_variance_not_bias.png Graphic file (t
 ype png)
 <use ../figures/fig_04_more_data_shrinks_variance_not_bias.png>
 Package pdftex.def Info: ../figures/fig_04_more_data_shrinks_variance_not_bias.
-png  used on input line 188.
+png  used on input line 252.
 (pdftex.def)             Requested size: 373.34943pt x 282.09172pt.
-
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<../figures/fig_05_regularization_path_network_stats.png, id=90, 677.53125pt x 
-406.51875pt>
+<../figures/fig_05_regularization_path_network_stats.png, id=91, 677.53125pt x 
+481.8pt>
 File: ../figures/fig_05_regularization_path_network_stats.png Graphic file (typ
 e png)
 <use ../figures/fig_05_regularization_path_network_stats.png>
 Package pdftex.def Info: ../figures/fig_05_regularization_path_network_stats.pn
-g  used on input line 217.
-(pdftex.def)             Requested size: 373.34943pt x 224.01399pt.
+g  used on input line 283.
+(pdftex.def)             Requested size: 373.34943pt x 265.49808pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 
-[4 <../figures/fig_03_posterior_bias_single.png>]
+[5]
 
-[5 <../figures/fig_04_more_data_shrinks_variance_not_bias.png>]
+[6 <../figures/fig_03_posterior_bias_single.png>]
+
+[7 <../figures/fig_04_more_data_shrinks_variance_not_bias.png>]
 (./extended_abstract.bbl
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: OT1).
@@ -597,24 +604,24 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
 
 
-[6 <../figures/fig_05_regularization_path_network_stats.png>])
+[8 <../figures/fig_05_regularization_path_network_stats.png>])
 
-[7] (./extended_abstract.aux)
+[9] (./extended_abstract.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `extended_abstract.out' has not changed.
-(rerunfilecheck)             Checksum: F6D73D00F0CDD415BE2D16B4F1661846;1311.
+(rerunfilecheck)             Checksum: 6EF87573EBA8BD7D33AE4AF451C88092;1366.
  ) 
 Here is how much of TeX's memory you used:
- 12820 strings out of 473190
- 202217 string characters out of 5704335
- 640145 words of memory out of 5000000
- 35772 multiletter control sequences out of 15000+600000
- 571362 words of font info for 129 fonts, out of 8000000 for 9000
+ 12892 strings out of 473190
+ 203187 string characters out of 5704335
+ 643864 words of memory out of 5000000
+ 35808 multiletter control sequences out of 15000+600000
+ 574256 words of font info for 152 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,79p,1014b,582s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,7n,79p,1014b,576s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmbx10.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dis
 t/fonts/type1/public/amsfonts/cm/cmbx12.pfb></opt/homebrew/Cellar/texlive/20250
@@ -631,10 +638,10 @@ f-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></opt/homebrew/Cellar/texlive/2
 0250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></opt/home
 brew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmtt10.pfb>
-Output written on extended_abstract.pdf (7 pages, 521836 bytes).
+Output written on extended_abstract.pdf (9 pages, 515289 bytes).
 PDF statistics:
- 183 PDF objects out of 1000 (max. 8388607)
- 142 compressed objects within 2 object streams
- 31 named destinations out of 1000 (max. 500000)
- 29264 words of extra memory for PDF output out of 29859 (max. 10000000)
+ 203 PDF objects out of 1000 (max. 8388607)
+ 160 compressed objects within 2 object streams
+ 37 named destinations out of 1000 (max. 500000)
+ 35408 words of extra memory for PDF output out of 35830 (max. 10000000)
 

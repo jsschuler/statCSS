@@ -1,4 +1,4 @@
-\begin{thebibliography}{7}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -11,6 +11,18 @@ Joshua~M. Epstein.
 \newblock \emph{Journal of Artificial Societies and Social Simulation},
   11\penalty0 (4):\penalty0 12, 2008.
 \newblock URL \url{https://www.jasss.org/11/4/12.html}.
+
+\bibitem[Gelman and Shalizi(2013)]{gelman2013}
+Andrew Gelman and Cosma~Rohilla Shalizi.
+\newblock Philosophy and the practice of {B}ayesian statistics.
+\newblock \emph{British Journal of Mathematical and Statistical Psychology},
+  66\penalty0 (1):\penalty0 8--38, 2013.
+\newblock \doi{10.1111/j.2044-8317.2011.02037.x}.
+
+\bibitem[Hazan et~al.(2016)Hazan, Papandreou, and Tarlow]{hazan2016}
+Tamir Hazan, George Papandreou, and Daniel Tarlow, editors.
+\newblock \emph{Perturbations, Optimization, and Statistics}.
+\newblock MIT Press, 2016.
 
 \bibitem[Holland et~al.(1983)Holland, Laskey, and Leinhardt]{holland1983}
 Paul~W. Holland, Kathryn~Blackmond Laskey, and Samuel Leinhardt.
@@ -48,5 +60,12 @@ M.~E.~J. Newman.
 \newblock Spread of epidemic disease on networks.
 \newblock \emph{Physical Review E}, 66\penalty0 (1):\penalty0 016128, 2002.
 \newblock \doi{10.1103/PhysRevE.66.016128}.
+
+\bibitem[Tibshirani(1996)]{tibshirani1996}
+Robert Tibshirani.
+\newblock Regression shrinkage and selection via the lasso.
+\newblock \emph{Journal of the Royal Statistical Society: Series B},
+  58\penalty0 (1):\penalty0 267--288, 1996.
+\newblock \doi{10.1111/j.2517-6161.1996.tb02080.x}.
 
 \end{thebibliography}

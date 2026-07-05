@@ -288,30 +288,29 @@ eta_rows    = filter(r -> startswith(r.label, "eta_"), df_post_sum)
 eta_rows[!, :eta] = parse.(Float64, replace.(eta_rows.label, "eta_" => ""))
 sort!(eta_rows, :eta)
 
-fig5 = Figure(size = (W, H), fontsize = FONT_SIZE)
+fig5 = Figure(size = (W, 640), fontsize = FONT_SIZE)
+Label(fig5[0, :],
+    text = "Regularization Path: Community Structure and ODE Bias",
+    fontsize = TITLE_SIZE, font = :bold)
 
 ax5a = Axis(fig5[1, 1],
-    xlabel = "Community structure (η)",
+    xlabel = "",
     ylabel = "Within-group edge share",
-    title  = "Regularization Path: Community Structure and ODE Bias",
-    titlesize = TITLE_SIZE,
-    yticklabelcolor = COL_NETWORK,
     ylabelcolor      = COL_NETWORK,
-    ylabelpadding    = 8.0)
+    yticklabelcolor  = COL_NETWORK,
+    xticklabelsvisible = false,
+    xticksvisible      = false)
 
-ax5b = Axis(fig5[1, 1],
-    ylabel          = "Posterior bias  (MAP − β_mf,true)",
-    yaxisposition   = :right,
-    yticklabelcolor = COL_BIASED,
-    ylabelcolor      = COL_BIASED)
-hidespines!(ax5b)
-hidexdecorations!(ax5b)
+ax5b = Axis(fig5[2, 1],
+    xlabel = "Community structure (η)",
+    ylabel = "Posterior bias  (MAP − β_mf,true)",
+    ylabelcolor      = COL_BIASED,
+    yticklabelcolor  = COL_BIASED)
 
 lines!(ax5a, df_eta_sum.eta, df_eta_sum.mean_within_share;
     color = COL_NETWORK, linewidth = 2.2)
 scatter!(ax5a, df_eta_sum.eta, df_eta_sum.mean_within_share;
     color = COL_NETWORK, markersize = 10)
-
 hlines!(ax5a, [1/4];
     color = (COL_NETWORK, 0.4), linestyle = :dash, linewidth = 1.5)
 text!(ax5a, 0.08, 1/4 + 0.015;
@@ -324,12 +323,8 @@ scatter!(ax5b, eta_rows.eta, eta_rows.bias_map;
 hlines!(ax5b, [0.0];
     color = (COL_BIASED, 0.35), linestyle = :dash, linewidth = 1.5)
 
-elems = [LineElement(color = COL_NETWORK, linewidth = 2),
-         LineElement(color = COL_BIASED,  linewidth = 2)]
-Legend(fig5[1, 2], elems,
-       ["Within-group edge share (left axis)",
-        "ODE posterior bias (right axis)"],
-       labelsize = LABEL_SIZE - 1)
+rowgap!(fig5.layout, 6)
+linkxaxes!(ax5a, ax5b)
 
 save("figures/fig_05_regularization_path_network_stats.png", fig5, px_per_unit = 2)
 
