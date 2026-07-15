@@ -13,8 +13,8 @@
 
 \onehalfspacing
 
-\title{\textbf{When More Data Make the Wrong Model More Certain}\\[0.4em]
-\large Network Dependence, Observation Grain, and Recoverability\\
+\title{\textbf{Network Uncertainty at the Resolution of the Data}\\[0.4em]
+\large Observation Grain, Reporting Clock, and Regularization\\
 in Agent-Based SIR Models}
 
 \author{John S. Schuler\\
@@ -31,84 +31,46 @@ in Agent-Based SIR Models}
 Pandemic transmission depends on contact network structure. The mean-field ODE SIR
 model is therefore strictly misspecified as a mechanistic account: the $SI/N$ term
 encodes uniform mixing, not actual contact topology. But misspecification alone does
-not determine whether the network mechanism is empirically recoverable. The central
-question is whether the observation process---the grain at which infections are
-measured and the clock at which they are reported---contains enough information to
-identify network structure.
+does not determine how uncertain inference about the network mechanism should be.
+The central question is how the observation process---the grain at which infections
+are measured and the clock at which they are reported---changes the uncertainty
+that remains over network structure.
 
-We demonstrate that under weekly aggregate incidence, it does not. Data are generated
-from a network SIR process with known community structure; a mean-field ODE is
-calibrated to those observations. The ODE posterior concentrates near a pseudo-true
+We treat the network as an uncertain object and compare posterior uncertainty under
+contact-network, group-level incidence, and aggregate incidence observations. Direct
+contact observation sharply constrains community structure; incidence-only schemes
+leave substantial uncertainty, with group grain more informative than aggregate
+grain and finer aggregate timing insufficient by itself. Half-normal, exponential,
+and spike-and-slab priors over the community parameter expose the central tradeoff:
+shrinkage toward uniform networks prevents unsupported structural claims but accepts
+conservative bias when observations cannot justify heterogeneity. As a cautionary reduction,
+we also calibrate a mean-field ODE to weekly aggregate observations. Its posterior
+concentrates near a pseudo-true
 parameter that absorbs network structure into a lower effective aggregate rate,
-understating the counterfactual reference by 23\% in our baseline experiment.
+understating the density-matched mean-field reference by 8.5\% in our baseline experiment.
 Collecting more independent outbreaks at the same grain and clock reduces posterior
 width fourfold without reducing bias. More data make the wrong model more certain
 when the additional data are collected under the same insufficient observation process.
-We connect this to PAC-Bayesian regularization: the ABM must allow heterogeneity,
-but the data---given their grain and clock---determine whether that heterogeneity
-is supported or should remain uncertain.
+We connect this to PAC-Bayesian regularization: the ABM supplies a distribution over
+heterogeneous networks, while grain and clock determine how far observation can move
+that distribution away from its regularizing prior.
 \end{abstract}
 
-\section{The Problem}
+\section{Calibration Requires an Observation Model}
 
-Agent-based modelers routinely simulate epidemic spread, opinion dynamics, and
-market behavior at the level of individual agents \citep{epstein2008}. The
-simulation produces rich internal trajectories: who interacted with whom, in what
-order, under what conditions. But the data available for calibration are almost
-always coarser. A modeler fitting an epidemic model to weekly case reports compares
-a fine-grained stochastic process to aggregate counts measured at a weekly clock.
-
-This mismatch creates a problem that is easy to overlook. When the model is
-calibrated to coarse data, estimated parameters may be fitting the observation
-process as much as the underlying mechanism. If the observation process discards
-information that the mechanism depends on, fitted parameters will not recover the
-true microscopic rates---no matter how much data are collected.
-
-Because network dependence is assumed to be mechanistically relevant, the central
-inferential problem is not whether the mean-field model is exactly true. It is not.
-The problem is whether the observation process is rich enough to distinguish
-network-dependent transmission from a lower-dimensional mean-field approximation.
-
-\section{Contribution}
-
-We study when network structure in an agent-based epidemic model is empirically
-recoverable from observed epidemic data. We assume that pandemic transmission is
-network-dependent, so the mean-field SIR model is strictly misspecified as a
-mechanistic account. However, misspecification alone does not determine whether
-the network mechanism can be learned. Recoverability depends on the observation
-process: the grain at which infections are measured and the clock at which they
-are reported.
-
-We use simulated network SIR epidemics to vary observational grain and clock. Under
-rich observations, network structure can be recovered using regularized inference.
-Under coarse aggregate observations, the same latent process supports only a reduced
-mean-field approximation, and additional data at the same grain make that
-approximation more certain without recovering the missing network mechanism. We
-connect this to PAC-Bayesian regularization: the ABM must allow heterogeneity, but
-the data determine whether that heterogeneity is supported or should remain uncertain.
-
-We formalize this by treating agent-based models as generative statistical models
-with two components:
+ABMs generate rich latent trajectories, but calibration data are usually coarser
+\citep{epstein2008}. We therefore treat an ABM as a generative statistical model:
 \[
 \text{simulator} \;\to\; \text{latent social process} \;\to\; \text{observation process} \;\to\; \text{data.}
 \]
-The simulator encodes a theory of how agents interact. The observation process
-encodes how those interactions are measured---at what resolution, with what
-reporting rate, and with what aggregation structure. A simulation is not yet a
-statistical model until both components are specified.
+The simulator encodes interaction; the observation process encodes what is measured.
+\emph{Grain} is the level observed---edges, individual events, groups, or population
+totals. \emph{Clock} is the reporting interval---event time, daily, weekly, or
+monthly. These define different calibration problems, not merely datasets of
+different quality. Our inferential target is therefore a distribution over network
+parameters conditional on a specified grain and clock.
 
-\subsection*{Observational Grain and Clock}
-
-We distinguish observational grain from observational clock. Grain refers to the
-level at which the latent process is measured: individual infection events,
-group-level incidence, network-edge exposure histories, or aggregate population
-counts. Clock refers to the temporal resolution at which those measurements are
-reported: daily, weekly, event-time, or irregular reporting intervals. In the
-baseline experiment, the observation process maps a continuous-time network epidemic
-into weekly aggregate incidence counts. This discards both network position and
-within-week timing.
-
-\section{The SIR Example and the Social Assumption}
+\section{Mean-Field and Network SIR}
 
 The standard mean-field ODE SIR model \citep{kermack1927, keeling2008} is:
 \[
@@ -116,58 +78,22 @@ The standard mean-field ODE SIR model \citep{kermack1927, keeling2008} is:
 \frac{dI}{dt} = \beta_{ODE}\frac{SI}{N} - \gamma I, \qquad
 \frac{dR}{dt} = \gamma I.
 \]
-The term $SI/N$ is often treated as algebra. It is not. It encodes a strong social
-assumption: susceptible-infected contact opportunities are proportional to the
-product of aggregate counts. This is uniform mixing. \emph{The product term is a
-social assumption.} Mean-field SIR is not wrong because it is mathematically crude;
-it is wrong because it encodes a social theory of uniform contact.
-
-\section{Network SIR and SI Edges}
-
-A network SIR model replaces uniform mixing with an explicit contact structure
-\citep{keeling2008, kiss2017}. For susceptible agent $i$ with neighbors
-$\mathcal{N}(i)$ in contact network $A$, the infection probability over a short
-interval follows from the competing-hazards structure of independent Poisson
-contact processes \citep[Ch.~3]{kiss2017}:
+The product $SI/N$ encodes uniform mixing: it is a social assumption, not merely
+algebra. A network SIR instead gives susceptible agent $i$ infection probability
+\citep{keeling2008,kiss2017}
 \[
 P\!\bigl(i \text{ infected in } [t,\,t+\Delta t]\bigr)
 = 1 - \exp\!\Bigl(-\beta\,\Delta t \sum_{j \in \mathcal{N}(i)} \mathbf{1}\{X_j(t)=I\}\Bigr).
 \]
-Here $\beta$ is the per-contact, per-infected-neighbor transmission rate---not the
-same parameter as $\beta_{ODE}$. Aggregate incidence depends on $E_{SI}(t)$, the
-number of susceptible-infected edges \citep{newman2002}, not directly on the
-product $SI$.
-
-A critical point about scale: $\beta$ and $\beta_{ODE}$ are not directly
-comparable. Under \emph{uniform} mixing with mean degree $\bar{d}$, each
-susceptible has on average $\bar{d} \cdot I/N$ infected contacts, so the
-aggregate infection rate is $\beta \cdot \bar{d} \cdot SI/N$. An ODE fitted to
-data from such a network should therefore recover:
+so aggregate incidence depends on susceptible--infected edges \citep{newman2002}.
+The per-contact $\beta$ is not $\beta_{ODE}$. Under uniform mixing with mean degree
+$\bar d$, their density-matched benchmark is
 \[
 \beta_{mf,true} = \beta \cdot \bar{d}.
 \]
-$\beta_{mf,true}$ is not a microscopic ground truth. It is a calibration benchmark:
-the ODE transmission rate recovered when the same per-contact process is run on a
-uniform network with the same mean degree and observed through the same reporting
-scheme. We validate this benchmark empirically: fitting the ODE to data from an
-actual uniform network with mean degree $\bar{d} \approx 12$ recovers $\beta_{ODE}$
-within 2\% of $\beta_{mf,true}$.
-
-Under community structure, the approximation $E_{SI} \approx c\,SI$ fails. The
-epidemic burns rapidly through the seed group, then stalls at group boundaries
-before spreading slowly across sparse between-group edges. This two-phase dynamics
-produces an aggregate incidence curve that no single-$\beta_{ODE}$ ODE can match
-exactly. The ODE instead concentrates its posterior around a pseudo-true
-$\beta_{ODE}^*$ that best approximates the overall pacing of the aggregate curve.
-
-The bias arises from fitting a structurally misspecified mean-field model to data
-whose observation process has discarded the network information needed to distinguish
-community transmission from a lower effective aggregate rate. The sources of failure
-are distinct: (1)~structural misspecification (the ODE assumes uniform mixing);
-(2)~grain loss (aggregate counts discard group and network position); (3)~clock
-loss (weekly reporting discards within-week timing); and (4)~parameter translation
-($\beta$ in the network model is not $\beta_{ODE}$). The gap $\beta_{ODE}^* -
-\beta_{mf,true}$ reflects community structure operating through all four channels.
+This is a benchmark, not microscopic truth. Community structure breaks the
+approximation between edge counts and $SI$, producing group-wise epidemic waves
+that a constant-rate ODE absorbs into a pseudo-true effective parameter.
 
 \section{Regularization and the Uniform Graph}
 
@@ -177,132 +103,105 @@ We generate contact networks from a stochastic block model \citep{holland1983}:
 \]
 where $B_{ij} = 1$ if agents $i,j$ share a group and $B_{ij} = -1/(K-1)$
 otherwise. The parameter $\eta$ controls community structure; $\alpha$ controls
-overall density. The regularization penalty is $\lambda\eta^2$.
+overall density. Because the logistic link is nonlinear, mean-zero coding of
+$B_{ij}$ does not by itself preserve density. We therefore solve for
+$\alpha(\eta)$ at each value of $\eta$ so that expected density is held fixed.
+We place the prior on the graph-generating parameter, not on a single realized
+adjacency matrix:
+\[
+  \eta \sim P, \qquad A\mid\eta \sim \operatorname{SBM}(\alpha(\eta),\eta).
+\]
+This hierarchy induces a distribution over networks while keeping inference
+computationally tractable and preserving graph-realization uncertainty conditional
+on $\eta$.
 
-At $\eta = 0$, all dyads have equal edge probability $\sigma(\alpha)$: the graph
-is Erd\H{o}s--R\'enyi and mixing is uniform. The uniform graph is not the neutral
-case. It is the maximally regularized case: the network that remains when all
-group-based distinctions have been shrunk to zero. The standard ODE is
-correspondingly the maximally regularized aggregate limit. It is not what happens
-when an ABM gets large. It is what happens when the ABM gets large, coarse, and
-socially uniform.
+At $\eta=0$ the graph is Erd\H{o}s--R\'enyi: uniformity is the conservative
+baseline, not a substantive truth. We compare half-normal, exponential, and
+spike-and-slab priors at three strengths. All favor $\eta=0$; the spike-and-slab
+also assigns exact uniformity positive mass. Regularization preserves the ABM's
+capacity for heterogeneity while requiring observations to justify using it.
 
-The role of regularization is not to eliminate heterogeneity from the ABM.
-Heterogeneity is part of the model's theoretical content: agents differ in contact
-neighborhoods, and epidemic transmission depends on the resulting susceptible-infected
-edges. Rather, regularization determines which forms of heterogeneity are supported
-by the data. In the stochastic block model, $\eta$ parameterizes group-based
-network structure, while the penalty $\lambda\eta^2$ shrinks unsupported group
-structure toward the uniform graph. Thus the uniform graph is not treated as
-substantively true; it is the limiting case obtained when the data do not justify
-retaining group-level contact heterogeneity.
-
-\section{Simulation Results}
+\section{Mean-Field Collapse as a Cautionary Example}
 
 \paragraph{Setup.}
-We simulate $N=1000$ agents in $K=4$ equal groups. The community network uses
-$\alpha=-4.4$, $\eta=2.5$ (mean degree $\approx 37$, within-group edge share
-$\approx 0.89$). True parameters: $\beta = 0.04$~day$^{-1}$ (per contact),
-$\gamma = 0.10$~day$^{-1}$ (mean infectious period 10 days). The mean-field
-reference rate is $\beta_{mf,true} = \beta\bar{d} \approx 1.47$. We simulate
-150 days, observe weekly aggregate incidence (21 time points), and fit the ODE
-via grid posterior with $\gamma$ fixed. Let $Y_k$ denote the observed new-infection
-count in week $k$ and $\hat{Y}_k$ the corresponding ODE-predicted count; the
-likelihood is:
+We simulate $N=1000$ agents in four groups with $\eta=2.5$, mean degree $12.2$,
+and within-group edge share $0.90$. We set per-contact $\beta=0.04$ and
+$\gamma=0.10$, observe 150 days as weekly aggregate incidence, and fit
+$\beta_{ODE}$ with $\gamma$ fixed using
 \[
 \log(1 + Y_k) \sim \mathcal{N}\!\bigl(\log(1+\hat{Y}_k),\,\sigma^2\bigr).
 \]
 
-\paragraph{Bias result.}
-The ODE posterior concentrates near $\beta_{ODE}^* \approx 1.13$, well below the
-counterfactual reference $\beta_{mf,true} \approx 1.47$---the value the ODE
-\emph{would} recover from a uniform network of the same density. The bias is
-$-0.33$, or 23\% of the reference. The community epidemic's two-phase shape
-(rapid within-group spread, slow between-group spread) cannot be reproduced by
-any single-$\beta_{ODE}$ ODE; the posterior instead concentrates on the
-$\beta_{ODE}$ that minimizes aggregate misfit.
-
-Standard posterior concentration and acceptable aggregate fit can coexist with
-mechanistic failure. The fitted ODE may track weekly incidence while its parameter
-absorbs unobserved network structure into a biased effective rate.
-
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.82\linewidth]{../figures/fig_03_posterior_bias_single.png}
-  \caption{ODE posteriors under uniform-network data (blue, ``Uniform network
-    posterior'') and community-network data (red, ``Community network posterior'').
-    The blue posterior sits near its reference $\beta_{mf,true}$ (dashed blue line):
-    this is what an unbiased ODE recovers from a uniform contact structure.
-    The red posterior concentrates well to the left of $\beta_{mf,true}$ (dashed
-    black line): community structure causes the two-phase epidemic shape that no
-    single-$\beta_{ODE}$ ODE can match, so the posterior is pulled toward a lower
-    effective rate. Both posteriors are tight---the bias is misspecification, not
-    uncertainty.}
-  \label{fig:bias_single}
-\end{figure}
+The ODE posterior concentrates near $\beta_{ODE}^* \approx 0.447$, below the
+density-matched benchmark $\beta_{mf,true}\approx0.489$, an 8.5\% bias. It absorbs
+unobserved community waves into a lower effective rate.
 
 \paragraph{More data, same grain.}
 We generate $R$ independent community-network outbreaks and pool their likelihoods.
 As $R$ increases from 1 to 20, the posterior 95\% credible interval width shrinks
-from 0.136 to 0.036---a fourfold reduction. The posterior MAP stays in the range
-$[1.11,\,1.22]$, always well below $\beta_{mf,true} \approx 1.47$.
+from 0.0268 to 0.0071---a nearly fourfold reduction. The posterior MAP stays in
+the range $[0.358,\,0.396]$, always below $\beta_{mf,true} \approx 0.489$.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
   \centering
   \includegraphics[width=0.82\linewidth]{../figures/fig_04_more_data_shrinks_variance_not_bias.png}
-  \caption{Four stacked panels showing the ODE posterior for $\beta_{ODE}$ as
-    the number of independent community-network outbreaks increases ($R = 1, 5, 10,
-    20$, top to bottom). All panels share the same horizontal axis. All additional
-    outbreaks are observed at the same grain (weekly aggregate incidence) and the
-    same clock (weekly reporting). The dotted vertical line marks $\beta_{true} =
-    0.04$ (per-contact rate; a different quantity than $\beta_{ODE}$). The dashed
-    vertical line marks the counterfactual reference $\beta_{mf,true} \approx 1.47$
-    (what an unbiased ODE would recover from a uniform network of the same density).
-    The 95\% credible interval width shrinks fourfold from $R=1$ to $R=20$; the
-    posterior mass does not move toward the reference. More data at the same
-    observational grain and clock estimate the wrong reduced model more precisely.}
+  \caption{Pooling $R=1,5,10,20$ weekly aggregate outbreaks narrows the ODE
+    posterior nearly fourfold without moving it to the density-matched reference
+    (dashed). Repetition at the same grain and clock sharpens the reduced model.}
   \label{fig:more_data}
 \end{figure}
 
-\medskip
-\noindent\textbf{More data at the same observational grain and clock do not recover
-the missing mechanism. They estimate the wrong reduced model more precisely.
-Variance shrinks. Bias remains.}
 
-\paragraph{Regularization path.}
-Varying $\eta$ from 0 to 3 and pooling 20 independent outbreaks per level to
-obtain stable pseudo-true estimates, ODE bias becomes increasingly negative as
-community structure strengthens: $-0.044$ (9\% of reference) at $\eta=0$ and
-$-0.48$ (23\% of reference) at $\eta=3$. Absolute bias increases convexly: modest
-for small $\eta$ and accelerating as community structure becomes strong. As
-community structure strengthens, the epidemic increasingly spreads in group-wise
-waves; the ODE compensates by fitting a lower effective transmission rate.
+\section{Network Uncertainty and PAC-Bayesian Regularization}
 
-\begin{figure}[h]
+We quantify uncertainty in $\eta$ under each observation process and prior. For
+incidence observations, we estimate a simulation-based synthetic likelihood from
+20 replicated epidemics per grid point and evaluate it on 30 independent held-out
+epidemics generated under both a uniform network ($\eta=0$) and a structured
+network ($\eta=2.5$). The prior comparison makes the intended tradeoff explicit.
+Under the uniform generator, a moderate spike-and-slab prior leaves less posterior
+mass on spurious structure than a moderate half-normal prior; for group-weekly
+data, the corresponding mass above $\eta=0.25$ is $0.27$ versus $0.58$. Under the
+structured generator, the same conservative prior increases downward bias: the
+mean group-weekly posterior for $\eta$ is $1.32$ under spike-and-slab and $1.50$
+under half-normal. Aggregate observations are shrunk still more strongly. This is
+the desired behavior: when grain and clock provide weak evidence about topology,
+we accept conservative bias rather than confidently hallucinating structure.
+
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.82\linewidth]{../figures/fig_05_regularization_path_network_stats.png}
-  \caption{Regularization path, shown as two panels. \textit{Top}: within-group
-    edge share (green) rises from uniform mixing ($1/K = 0.25$, dashed) toward 1
-    as $\eta$ increases. \textit{Bottom}: ODE posterior bias (MAP $-\,\beta_{mf,true}$,
-    red) becomes increasingly negative; absolute bias increases convexly with $\eta$.
-    At $\eta = 0$ the network is approximately Erd\H{o}s--R\'enyi and bias is near
-    zero; at $\eta = 3$ bias reaches $-0.48$.}
-  \label{fig:reg_path}
+  \includegraphics[width=0.90\linewidth]{../figures/fig_08_network_uq_by_observation.png}
+  \caption{Prior sensitivity and observation-conditioned network uncertainty for
+    moderate half-normal, exponential, and spike-and-slab priors. Top left: false
+    structural mass under a uniform generator. Top right: shrinkage of the posterior
+    mean under a structured generator ($\eta=2.5$, dashed reference). Bottom:
+    posterior spread and information gain under the structured generator. Stronger
+    concentration near uniformity suppresses invented structure at the cost of
+    conservative bias when structure is present. Bars average 30 held-out epidemics.}
+  \label{fig:network_uq}
 \end{figure}
-
-\section{PAC-Bayesian Inference and Recoverability}
 
 In a PAC-Bayesian formulation \citep{mcallester1999}, candidate network structures
 or network-generating parameters are evaluated by predictive performance penalized
 by departure from a prior over simpler or more regular mechanisms. Under rich
-observation---such as individual infection times or sufficiently fine group-level
-incidence---the posterior should concentrate near the correct network structure or
-community parameter. Under coarse observation---such as weekly aggregate
-incidence---the posterior should remain diffuse over network structures or
-concentrate only on reduced effective parameters.
+observation---such as contact edges or exposure histories---the posterior can move
+substantially away from the regularizing prior. Under coarse observation---such as
+weekly aggregate incidence---many network configurations can retain posterior mass.
+For observation operator $\mathcal O_{g,c}$ and its associated calibration loss,
+the generalized posterior takes the form
+\[
+ Q_{g,c}(d\eta) \propto
+ \exp\{-\tau\widehat L_{g,c}(\eta)\}\,P(d\eta),
+ \qquad A\mid\eta\sim P(A\mid\eta).
+\]
+Equivalently, $Q_{g,c}$ trades posterior-averaged predictive loss against
+$\operatorname{KL}(Q_{g,c}\|P)$. Grain and clock therefore enter the loss through
+the observation operator, while the parameter prior determines how unsupported
+network structure is regularized.
 
-PAC-Bayes lets the model recover structure when the data support it and quantify
-uncertainty when they do not. This is the appropriate inferential logic for
+PAC-Bayes offers a framework for quantifying which network distinctions the data
+support and how uncertain unsupported distinctions should remain. This is the
+appropriate inferential logic for
 agent-based models: retain heterogeneity when the data support it, penalize it
 when they do not, and quantify uncertainty when the observation process cannot
 decide. A mechanism cannot be validated at a resolution where its identifying
@@ -324,28 +223,32 @@ they are not, the instability is itself informative about what the data can and
 cannot identify \citep{gelman2013}.
 
 A practical workflow follows: (1)~specify the latent process and observation
-process separately; (2)~compare richer simulations against their mean-field limits;
-(3)~penalize unnecessary heterogeneity in agents and network structure; (4)~vary
-observation grain and clock; (5)~examine posterior bias; (6)~run posterior
-predictive checks.
+process separately; (2)~place a regularizing prior over network structure;
+(3)~condition that distribution under alternative grains and clocks; (4)~compare
+posterior entropy, spread, and information gain; (5)~propagate network uncertainty
+to epidemic and intervention predictions; (6)~run posterior predictive checks.
 
 \section{Conclusion}
 
 Mean-field SIR is not wrong because it is mathematically crude; it is wrong because
 it encodes a social theory of uniform contact. Whether that wrongness matters
-empirically depends on the observation process. Fine-grained data can support
-network recovery. Coarse data may only support a reduced aggregate model.
-PAC-Bayesian regularization provides a way to distinguish these cases: retain
-heterogeneity when the data support it, penalize it when they do not, and quantify
-uncertainty when the observation process cannot decide.
+empirically depends on the observation process. The inferential target should be a
+distribution over compatible networks whose uncertainty is explicitly conditional
+on observational grain and clock. Regularized network inference retains
+heterogeneity when observations constrain it and preserves uncertainty when they do
+not.
 
 Under weekly aggregate incidence, additional outbreaks reduce posterior variance
 around a pseudo-true ODE parameter but do not recover the network mechanism. More
 data at the same grain and clock estimate the wrong reduced model more precisely.
 The fully qualified claim is this: more data make the wrong model more certain when
 the additional data are collected under the same insufficient observation process.
-Richer grain or finer clock data can recover network structure; coarse data require
-regularized uncertainty rather than false mechanistic confidence.
+Direct contact-network observation sharply reduces uncertainty about community
+structure in our experiment. Group-level incidence produces a smaller but meaningful
+update, while finer aggregate timing alone yields limited information about topology.
+The point is not to declare one network recovered or unrecovered, but to quantify
+the distribution of networks compatible with each observation process. Coarse data
+require regularized uncertainty rather than false mechanistic confidence.
 
 \bibliographystyle{plainnat}
 \bibliography{references}

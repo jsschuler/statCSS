@@ -422,6 +422,61 @@ text!(ax7, minimum(peak_incidences) + 5,
 
 save("figures/fig_07_histogram_perturbation_smoothing.png", fig7, px_per_unit = 2)
 
+# ============================================================
+# Figure 8: Network uncertainty by observation process
+# ============================================================
+println("  fig_08: network uncertainty by observation process")
+uq = CSV.read("output/posterior/posterior_eta_validation_summary.csv", DataFrame)
+order = ["aggregate_monthly", "aggregate_weekly", "aggregate_daily", "group_weekly"]
+labels = ["Aggregate\nmonthly", "Aggregate\nweekly", "Aggregate\ndaily",
+          "Group-level\nweekly"]
+families = ["half_normal", "exponential", "spike_slab"]
+family_labels = ["Half-normal", "Exponential", "Spike-and-slab"]
+family_colors = [COL_UNBIASED, COL_BIASED, COL_NETWORK]
+offsets = [-0.24, 0.0, 0.24]
+xs = collect(1:4)
+
+function uqvals(true_eta, family, column)
+    [begin
+        d = uq[(uq.true_eta .== true_eta) .& (uq.scheme .== scheme) .&
+               (uq.prior_family .== family) .& (uq.prior_strength .== "moderate"), :]
+        d[1, column]
+    end for scheme in order]
+end
+
+fig8 = Figure(size = (1100, 800), fontsize = FONT_SIZE)
+axes8 = [
+    Axis(fig8[1,1], xticks=(xs, labels), ylabel="Posterior mass on eta > 0.25",
+         title="False structure under uniform generator"),
+    Axis(fig8[1,2], xticks=(xs, labels), ylabel="Posterior mean of eta",
+         title="Conservative bias under eta = 2.5"),
+    Axis(fig8[2,1], xticks=(xs, labels), ylabel="Posterior SD of eta",
+         title="Remaining uncertainty under eta = 2.5"),
+    Axis(fig8[2,2], xticks=(xs, labels), ylabel="KL from parameter prior",
+         title="Information gain under eta = 2.5"),
+]
+for ax in axes8
+    ax.xticklabelrotation[] = pi/8
+    ax.xticklabelsize[] = 10
+end
+for (j, (family, flabel, color, offset)) in enumerate(zip(families, family_labels,
+                                                           family_colors, offsets))
+    false_structure = 1 .- uqvals(0.0, family, :mean_mass_near_uniform)
+    structured_mean = uqvals(2.5, family, :mean_posterior_mean)
+    structured_sd = uqvals(2.5, family, :mean_eta_sd)
+    structured_kl = uqvals(2.5, family, :mean_kl_from_prior)
+    barplot!(axes8[1], xs .+ offset, false_structure; width=0.22, color=color,
+             label=flabel)
+    barplot!(axes8[2], xs .+ offset, structured_mean; width=0.22, color=color)
+    barplot!(axes8[3], xs .+ offset, structured_sd; width=0.22, color=color)
+    barplot!(axes8[4], xs .+ offset, structured_kl; width=0.22, color=color)
+end
+hlines!(axes8[2], [2.5]; color=:black, linestyle=:dash, linewidth=2)
+axislegend(axes8[1], position=:rt, labelsize=10)
+Label(fig8[3,:], text="Moderate priors; bars average 30 held-out epidemics per generator",
+      fontsize=11, color=:gray30, font=:italic)
+save("figures/fig_08_network_uq_by_observation.png", fig8, px_per_unit = 2)
+
 println("\nAll figures saved to figures/")
 println("  fig_01_model_workflow.png")
 println("  fig_02_network_vs_ode_incidence.png")
@@ -430,3 +485,4 @@ println("  fig_04_more_data_shrinks_variance_not_bias.png")
 println("  fig_05_regularization_path_network_stats.png")
 println("  fig_06_grain_clock_coarsening.png")
 println("  fig_07_histogram_perturbation_smoothing.png")
+println("  fig_08_network_uq_by_observation.png")

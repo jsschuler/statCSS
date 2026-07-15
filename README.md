@@ -1,33 +1,38 @@
-# When More Data Make the Wrong Model More Certain
+# Network Uncertainty at the Resolution of the Data
 
-**Network Dependence, Regularization, and Mean-Field Bias in Agent-Based SIR Models**
+**Observation Grain, Reporting Clock, and Regularization in Agent-Based SIR Models**
 
-CSSSA 2025 — Extended Abstract
+CSSSA 2026 — Extended Abstract
 
 ---
 
 ## What this repository demonstrates
 
-Fitting a mean-field ODE SIR model to coarse aggregate data from a
-community-structured network epidemic produces systematically biased parameter
-estimates. Collecting more data at the same observational grain sharpens the
-posterior — shrinking variance — without reducing the bias. The analyst becomes
-more confident about the wrong model.
+The repository quantifies posterior uncertainty over community network structure
+under contact-network, group-level incidence, and aggregate incidence observations.
+Observation grain and reporting clock determine how far inference can move from a
+regularizing network prior. A mean-field ODE experiment illustrates what happens
+when remaining network uncertainty is collapsed into one effective rate.
 
-The core claim is formalized through three experiments:
+The analysis is organized around four experiments:
 
-1. **Bias result** — A single community-network outbreak yields a posterior
-   concentrated near β_ODE* ≈ 1.13, 23% below the counterfactual reference
-   β_mf,true ≈ 1.47 (what an unbiased ODE recovers from a uniform network of
-   the same density).
+1. **Bias result** — A single density-controlled community-network outbreak yields
+   a posterior concentrated near β_ODE* ≈ 0.447, 8.5% below the mean-field
+   reference β_mf,true ≈ 0.489.
 
 2. **More data, same grain** — Pooling R = 1, 5, 10, 20 independent outbreaks
-   shrinks the 95% CI width fourfold (0.136 → 0.036). The posterior MAP stays
-   in [1.11, 1.22], never approaching the reference.
+   shrinks the 95% CI width nearly fourfold (0.0268 → 0.0071). The posterior
+   MAP remains below the reference.
 
-3. **Regularization path** — Varying community structure strength η from 0 to 3
-   produces a strictly monotone, convex increase in ODE bias: −0.044 at η = 0
-   (Erdős–Rényi, near-zero bias) to −0.48 at η = 3.
+3. **Community-structure path** — Varying η from 0 to 3 while holding expected
+   density fixed produces the largest ODE discrepancies under strong community
+   structure; bias is about −0.041 at η=0 and −0.089 at η=3.
+
+4. **Parameter-prior sensitivity** — Half-normal, exponential, and spike-and-slab
+   priors over η are compared at weak, moderate, and strong settings under both
+   uniform and structured generators. Priors concentrated near η=0 suppress false
+   structural claims but introduce conservative bias when structure is present;
+   richer group-level grain overcomes more of that shrinkage than aggregate data.
 
 ---
 
@@ -117,6 +122,8 @@ Then run in order:
 ```bash
 julia --project=. scripts/01_generate_data.jl
 julia --project=. scripts/02_fit_ode_grid_posterior.jl
+julia --project=. scripts/05_fit_network_eta.jl
+julia --project=. scripts/06_recover_eta_observation.jl
 julia --project=. scripts/03_make_figures.jl
 ```
 
@@ -150,7 +157,7 @@ pdflatex extended_abstract.tex
 |-----------|-------|-------|
 | N | 1000 | Agents |
 | K | 4 | Equal-sized groups |
-| α | −4.4 | SBM baseline log-odds |
+| α₀ | −4.4 | Target uniform-network density; community intercepts are recalibrated by η |
 | η (community) | 2.5 | Community structure strength |
 | β_true | 0.04 day⁻¹ | Per-contact transmission rate |
 | γ_true | 0.10 day⁻¹ | Recovery rate (mean period 10 days) |
@@ -158,7 +165,7 @@ pdflatex extended_abstract.tex
 | Observation grain | 7 days | Weekly aggregate incidence |
 | N_repeats | 20 | Independent outbreaks per scenario |
 | η values (reg. path) | 0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0 | |
-| β_ODE grid | [0.01, 4.0], 400 pts, log-spaced | |
+| β_ODE grid | [0.01, 4.0], 2000 pts, log-spaced | |
 | σ_obs | 0.3 | Log-count Gaussian observation noise |
 
 ---
@@ -171,9 +178,10 @@ pdflatex extended_abstract.tex
 | 2 | `fig_02_network_vs_ode_incidence.png` | Community vs. uniform epidemic curves; ODE fit |
 | 3 | `fig_03_posterior_bias_single.png` | Posteriors under uniform (blue) and community (red) data; bias visible |
 | 4 | `fig_04_more_data_shrinks_variance_not_bias.png` | Four stacked panels R=1,5,10,20; CI shrinks, MAP stays biased |
-| 5 | `fig_05_regularization_path_network_stats.png` | Monotone bias vs. η; within-group edge share overlaid |
+| 5 | `fig_05_regularization_path_network_stats.png` | Density-controlled bias path vs. η; within-group edge share overlaid |
 | 6 | `fig_06_grain_clock_coarsening.png` | Effect of observation grain (daily/weekly/monthly) |
 | 7 | `fig_07_histogram_perturbation_smoothing.png` | Posterior robustness across network realizations |
+| 8 | `fig_08_network_uq_by_observation.png` | Posterior network uncertainty and information gain by grain and clock |
 
 ---
 
@@ -181,8 +189,8 @@ pdflatex extended_abstract.tex
 
 If you use this code or build on these results, please cite:
 
-> [Author]. "When More Data Make the Wrong Model More Certain: Network Dependence,
-> Regularization, and Mean-Field Bias in Agent-Based SIR Models." CSSSA 2025.
+> John S. Schuler. "Network Uncertainty at the Resolution of the Data: Observation
+> Grain, Reporting Clock, and Regularization in Agent-Based SIR Models." CSSSA 2026.
 
 Key references:
 

@@ -44,7 +44,8 @@ function simulate_network_sir(
     T::Float64,
     dt::Float64,
     initial_infected::Vector{Int},
-    rng::AbstractRNG
+    rng::AbstractRNG,
+    groups::Union{Vector{Int}, Nothing} = nothing
 )::DataFrame
     N = nv(g)
     # Status codes: 1=S, 2=I, 3=R
@@ -64,6 +65,8 @@ function simulate_network_sir(
     R_counts = Int[]
     new_inf = Int[]
     new_rec = Int[]
+    K = groups === nothing ? 0 : maximum(groups)
+    new_inf_groups = [Int[] for _ in 1:K]
 
     t = 0.0
     n_steps = round(Int, T / dt)
@@ -80,12 +83,16 @@ function simulate_network_sir(
         if step == n_steps
             push!(new_inf, 0)
             push!(new_rec, 0)
+            for k in 1:K
+                push!(new_inf_groups[k], 0)
+            end
             break
         end
 
         # Compute transitions (synchronous: use current status for all decisions)
         new_status = copy(status)
         infections_this_step = 0
+        infections_by_group = zeros(Int, K)
         recoveries_this_step = 0
 
         for i in 1:N
@@ -102,6 +109,9 @@ function simulate_network_sir(
                     if rand(rng) < p_infect
                         new_status[i] = 2
                         infections_this_step += 1
+                        if groups !== nothing
+                            infections_by_group[groups[i]] += 1
+                        end
                     end
                 end
             elseif status[i] == 2  # infected
@@ -114,11 +124,14 @@ function simulate_network_sir(
 
         push!(new_inf, infections_this_step)
         push!(new_rec, recoveries_this_step)
+        for k in 1:K
+            push!(new_inf_groups[k], infections_by_group[k])
+        end
         status = new_status
         t += dt
     end
 
-    return DataFrame(
+    result = DataFrame(
         t = times,
         S = S_counts,
         I = I_counts,
@@ -126,6 +139,10 @@ function simulate_network_sir(
         new_infections = new_inf,
         new_recoveries = new_rec,
     )
+    for k in 1:K
+        result[!, Symbol("new_infections_group_$(k)")] = new_inf_groups[k]
+    end
+    return result
 end
 
 """

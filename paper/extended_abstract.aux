@@ -3,36 +3,29 @@
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \citation{epstein2008}
-\@writefile{toc}{\contentsline {section}{\numberline {1}The Problem}{1}{section.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}Contribution}{2}{section.2}\protected@file@percent }
 \citation{kermack1927,keeling2008}
 \citation{keeling2008,kiss2017}
-\citation{kiss2017}
 \citation{newman2002}
-\@writefile{toc}{\contentsline {section}{\numberline {3}The SIR Example and the Social Assumption}{3}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Network SIR and SI Edges}{3}{section.4}\protected@file@percent }
 \citation{holland1983}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Regularization and the Uniform Graph}{4}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Calibration Requires an Observation Model}{2}{section.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Mean-Field and Network SIR}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Regularization and the Uniform Graph}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Mean-Field Collapse as a Cautionary Example}{3}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Setup.}{3}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{More data, same grain.}{3}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Network Uncertainty and PAC-Bayesian Regularization}{3}{section.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Pooling $R=1,5,10,20$ weekly aggregate outbreaks narrows the ODE posterior nearly fourfold without moving it to the density-matched reference (dashed). Repetition at the same grain and clock sharpens the reduced model.}}{4}{figure.1}\protected@file@percent }
+\newlabel{fig:more_data}{{1}{4}{Pooling $R=1,5,10,20$ weekly aggregate outbreaks narrows the ODE posterior nearly fourfold without moving it to the density-matched reference (dashed). Repetition at the same grain and clock sharpens the reduced model}{figure.1}{}}
 \citation{mcallester1999}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Simulation Results}{5}{section.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Setup.}{5}{section*.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Bias result.}{5}{section*.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{More data, same grain.}{5}{section*.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Regularization path.}{5}{section*.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Prior sensitivity and observation-conditioned network uncertainty for moderate half-normal, exponential, and spike-and-slab priors. Top left: false structural mass under a uniform generator. Top right: shrinkage of the posterior mean under a structured generator ($\eta =2.5$, dashed reference). Bottom: posterior spread and information gain under the structured generator. Stronger concentration near uniformity suppresses invented structure at the cost of conservative bias when structure is present. Bars average 30 held-out epidemics.}}{5}{figure.2}\protected@file@percent }
+\newlabel{fig:network_uq}{{2}{5}{Prior sensitivity and observation-conditioned network uncertainty for moderate half-normal, exponential, and spike-and-slab priors. Top left: false structural mass under a uniform generator. Top right: shrinkage of the posterior mean under a structured generator ($\eta =2.5$, dashed reference). Bottom: posterior spread and information gain under the structured generator. Stronger concentration near uniformity suppresses invented structure at the cost of conservative bias when structure is present. Bars average 30 held-out epidemics}{figure.2}{}}
 \citation{tibshirani1996}
 \citation{hazan2016}
 \citation{gelman2013}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces ODE posteriors under uniform-network data (blue, ``Uniform network posterior'') and community-network data (red, ``Community network posterior''). The blue posterior sits near its reference $\beta _{mf,true}$ (dashed blue line): this is what an unbiased ODE recovers from a uniform contact structure. The red posterior concentrates well to the left of $\beta _{mf,true}$ (dashed black line): community structure causes the two-phase epidemic shape that no single-$\beta _{ODE}$ ODE can match, so the posterior is pulled toward a lower effective rate. Both posteriors are tight---the bias is misspecification, not uncertainty.}}{6}{figure.1}\protected@file@percent }
-\newlabel{fig:bias_single}{{1}{6}{ODE posteriors under uniform-network data (blue, ``Uniform network posterior'') and community-network data (red, ``Community network posterior''). The blue posterior sits near its reference $\beta _{mf,true}$ (dashed blue line): this is what an unbiased ODE recovers from a uniform contact structure. The red posterior concentrates well to the left of $\beta _{mf,true}$ (dashed black line): community structure causes the two-phase epidemic shape that no single-$\beta _{ODE}$ ODE can match, so the posterior is pulled toward a lower effective rate. Both posteriors are tight---the bias is misspecification, not uncertainty}{figure.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}PAC-Bayesian Inference and Recoverability}{6}{section.7}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Four stacked panels showing the ODE posterior for $\beta _{ODE}$ as the number of independent community-network outbreaks increases ($R = 1, 5, 10, 20$, top to bottom). All panels share the same horizontal axis. All additional outbreaks are observed at the same grain (weekly aggregate incidence) and the same clock (weekly reporting). The dotted vertical line marks $\beta _{true} = 0.04$ (per-contact rate; a different quantity than $\beta _{ODE}$). The dashed vertical line marks the counterfactual reference $\beta _{mf,true} \approx 1.47$ (what an unbiased ODE would recover from a uniform network of the same density). The 95\% credible interval width shrinks fourfold from $R=1$ to $R=20$; the posterior mass does not move toward the reference. More data at the same observational grain and clock estimate the wrong reduced model more precisely.}}{7}{figure.2}\protected@file@percent }
-\newlabel{fig:more_data}{{2}{7}{Four stacked panels showing the ODE posterior for $\beta _{ODE}$ as the number of independent community-network outbreaks increases ($R = 1, 5, 10, 20$, top to bottom). All panels share the same horizontal axis. All additional outbreaks are observed at the same grain (weekly aggregate incidence) and the same clock (weekly reporting). The dotted vertical line marks $\beta _{true} = 0.04$ (per-contact rate; a different quantity than $\beta _{ODE}$). The dashed vertical line marks the counterfactual reference $\beta _{mf,true} \approx 1.47$ (what an unbiased ODE would recover from a uniform network of the same density). The 95\% credible interval width shrinks fourfold from $R=1$ to $R=20$; the posterior mass does not move toward the reference. More data at the same observational grain and clock estimate the wrong reduced model more precisely}{figure.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{6}{section.6}\protected@file@percent }
 \bibstyle{plainnat}
 \bibdata{references}
 \bibcite{epstein2008}{{1}{2008}{{Epstein}}{{}}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Regularization path, shown as two panels. \textit  {Top}: within-group edge share (green) rises from uniform mixing ($1/K = 0.25$, dashed) toward 1 as $\eta $ increases. \textit  {Bottom}: ODE posterior bias (MAP $-\,\beta _{mf,true}$, red) becomes increasingly negative; absolute bias increases convexly with $\eta $. At $\eta = 0$ the network is approximately Erd\H {o}s--R\'enyi and bias is near zero; at $\eta = 3$ bias reaches $-0.48$.}}{8}{figure.3}\protected@file@percent }
-\newlabel{fig:reg_path}{{3}{8}{Regularization path, shown as two panels. \textit {Top}: within-group edge share (green) rises from uniform mixing ($1/K = 0.25$, dashed) toward 1 as $\eta $ increases. \textit {Bottom}: ODE posterior bias (MAP $-\,\beta _{mf,true}$, red) becomes increasingly negative; absolute bias increases convexly with $\eta $. At $\eta = 0$ the network is approximately Erd\H {o}s--R\'enyi and bias is near zero; at $\eta = 3$ bias reaches $-0.48$}{figure.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{8}{section.8}\protected@file@percent }
 \bibcite{gelman2013}{{2}{2013}{{Gelman and Shalizi}}{{}}}
 \bibcite{hazan2016}{{3}{2016}{{Hazan et~al.}}{{Hazan, Papandreou, and Tarlow}}}
 \bibcite{holland1983}{{4}{1983}{{Holland et~al.}}{{Holland, Laskey, and Leinhardt}}}
@@ -42,4 +35,4 @@
 \bibcite{mcallester1999}{{8}{1999}{{McAllester}}{{}}}
 \bibcite{newman2002}{{9}{2002}{{Newman}}{{}}}
 \bibcite{tibshirani1996}{{10}{1996}{{Tibshirani}}{{}}}
-\gdef \@abspage@last{9}
+\gdef \@abspage@last{7}

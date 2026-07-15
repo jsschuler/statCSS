@@ -98,6 +98,29 @@ end
     @test pen2 ≈ lambda * 2.0^2
 end
 
+@testset "Density-balanced community path" begin
+    target = logistic(ALPHA_TEST)
+    sizes = fill(N_TEST ÷ K_TEST, K_TEST)
+    for eta in (0.0, 1.0, 2.0, 3.0)
+        alpha_eta = density_balanced_alpha(target, eta, sizes)
+        @test expected_edge_density(alpha_eta, eta, sizes) ≈ target atol=1e-10
+    end
+end
+
+@testset "Rich-observation eta recovery" begin
+    eta_true = 2.0
+    sizes = fill(N_TEST ÷ K_TEST, K_TEST)
+    target = logistic(ALPHA_TEST)
+    alpha = density_balanced_alpha(target, eta_true, sizes)
+    g = generate_community_graph(pop, NetworkGeneratorParams(alpha, eta_true, K_TEST),
+                                 Random.MersenneTwister(SEED + 99))
+    eta_grid = collect(range(0.0, 3.0, length=121))
+    post = grid_posterior_eta(g, pop, eta_grid, target; lambda_eta=0.1)
+    eta_map = post.eta[argmax(post.posterior_weight)]
+    @test abs(eta_map - eta_true) < 0.35
+    @test sum(post.posterior_weight) ≈ 1.0
+end
+
 # ============================================================
 # Test 3: SIR Conservation
 # S(t) + I(t) + R(t) = N at every time step.

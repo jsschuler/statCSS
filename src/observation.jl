@@ -15,7 +15,7 @@ using Distributions
 using Random
 using ..SIRTypes: ObservationParams
 
-export observe_coarse_incidence
+export observe_coarse_incidence, observe_group_incidence
 
 """
     observe_coarse_incidence(latent_df; obs_params, rng) -> DataFrame
@@ -102,6 +102,29 @@ function observe_coarse_incidence(
         true_incidence = true_incidence,
         reported_incidence = reported_incidence,
     )
+end
+
+"""Aggregate group-specific latent incidence columns into a long observation table."""
+function observe_group_incidence(
+    latent_df::DataFrame;
+    dt_obs::Float64
+)::DataFrame
+    group_cols = filter(n -> startswith(String(n), "new_infections_group_"),
+                        propertynames(latent_df))
+    isempty(group_cols) && throw(ArgumentError("latent data contain no group-incidence columns"))
+    t_max = maximum(latent_df.t)
+    n_periods = floor(Int, t_max / dt_obs)
+    rows = NamedTuple[]
+    for period in 1:n_periods
+        t_start = (period - 1) * dt_obs
+        t_end = period * dt_obs
+        mask = (latent_df.t .>= t_start) .& (latent_df.t .< t_end)
+        for (group, col) in enumerate(group_cols)
+            push!(rows, (period=period, group=group, t_start=t_start, t_end=t_end,
+                         incidence=Float64(sum(latent_df[mask, col]))))
+        end
+    end
+    return DataFrame(rows)
 end
 
 end # module

@@ -91,9 +91,11 @@ print_divider()
 rng = Random.MersenneTwister(SEED)
 groups = make_equal_groups(N, K)
 pop = Population(N, groups)
+group_sizes = [count(==(k), groups) for k in 1:K]
 
 net_params_uniform = NetworkGeneratorParams(ALPHA, ETA_UNIFORM, K)
-net_params_community = NetworkGeneratorParams(ALPHA, ETA_COMMUNITY, K)
+alpha_community = density_balanced_alpha(logistic(ALPHA), ETA_COMMUNITY, group_sizes)
+net_params_community = NetworkGeneratorParams(alpha_community, ETA_COMMUNITY, K)
 
 g_uniform   = generate_uniform_graph(N, logistic(ALPHA), rng)
 g_community = generate_community_graph(pop, net_params_community, rng)

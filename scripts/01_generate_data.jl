@@ -48,14 +48,18 @@ end
 
 groups = make_equal_groups(N, K)
 pop    = Population(N, groups)
+group_sizes = [count(==(k), groups) for k in 1:K]
+target_density = logistic(ALPHA)
+alpha_community = density_balanced_alpha(target_density, ETA_C, group_sizes)
 obs_params = ObservationParams(DT_OBS, 1.0, 0.0)  # perfect observation
 sir_params = SIRParams(BETA_TRUE, GAMMA_TRUE)
 
 net_params_u = NetworkGeneratorParams(ALPHA, ETA_U, K)
-net_params_c = NetworkGeneratorParams(ALPHA, ETA_C, K)
+net_params_c = NetworkGeneratorParams(alpha_community, ETA_C, K)
 
 println("Generating data. Parameters:")
-@printf("  N=%d, K=%d, ALPHA=%.2f, ETA_C=%.1f\n", N, K, ALPHA, ETA_C)
+@printf("  N=%d, K=%d, target ALPHA=%.2f, ETA_C=%.1f\n", N, K, ALPHA, ETA_C)
+@printf("  density-balanced community ALPHA=%.4f\n", alpha_community)
 @printf("  beta_true=%.4f, gamma_true=%.4f\n", BETA_TRUE, GAMMA_TRUE)
 @printf("  DT_SIM=%.2f, DT_OBS=%.1f, T_SIM=%.0f\n", DT_SIM, DT_OBS, T_SIM)
 
@@ -87,8 +91,7 @@ beta_mf_community = BETA_TRUE * stats_c.mean_degree
         stats_u.mean_degree, beta_mf_uniform)
 @printf("  Community: mean_degree=%.2f, beta_mf_true=%.4f\n",
         stats_c.mean_degree, beta_mf_community)
-@printf("  NOTE: Community is denser due to approximate density balancing.\n")
-@printf("        beta_mf values are computed per-network for apples-to-apples comparison.\n")
+@printf("  Networks use the same expected density; realized references are computed per network.\n")
 
 # Seed infection only in group 1 (one seed per group-1 agent index)
 # Seeding in one group forces epidemic to cross community boundaries — this
@@ -167,7 +170,8 @@ eta_values = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
 eta_records = []
 
 for eta in eta_values
-    net_params_eta = NetworkGeneratorParams(ALPHA, eta, K)
+    alpha_eta = density_balanced_alpha(target_density, eta, group_sizes)
+    net_params_eta = NetworkGeneratorParams(alpha_eta, eta, K)
     total_within_shares = Float64[]
     total_mean_degrees  = Float64[]
     obs_this_eta = DataFrame[]
@@ -197,6 +201,7 @@ for eta in eta_values
 
     push!(eta_records, (
         eta = eta,
+        alpha = alpha_eta,
         mean_within_share = mean(total_within_shares),
         mean_degree       = mean(total_mean_degrees),
         beta_mf_true      = BETA_TRUE * mean(total_mean_degrees),
@@ -239,6 +244,7 @@ metadata = Dict(
     "N"               => N,
     "K"               => K,
     "ALPHA"           => ALPHA,
+    "ALPHA_COMMUNITY" => alpha_community,
     "ETA_U"           => ETA_U,
     "ETA_C"           => ETA_C,
     "BETA_TRUE"       => BETA_TRUE,

@@ -8,7 +8,7 @@ using Random
 using ..SIRTypes: Population, NetworkGeneratorParams
 
 export logistic, generate_uniform_graph, generate_community_graph,
-       network_regularization
+       network_regularization, density_balanced_alpha, expected_edge_density
 
 """
     logistic(x)
@@ -16,6 +16,42 @@ export logistic, generate_uniform_graph, generate_community_graph,
 Standard logistic function: 1 / (1 + exp(-x)).
 """
 logistic(x::Float64) = 1.0 / (1.0 + exp(-x))
+
+"""Exact expected SBM edge density for finite group sizes."""
+function expected_edge_density(
+    alpha::Float64,
+    eta::Float64,
+    group_sizes::Vector{Int}
+)::Float64
+    K = length(group_sizes)
+    N = sum(group_sizes)
+    total_dyads = N * (N - 1) / 2
+    within_dyads = sum(n * (n - 1) / 2 for n in group_sizes)
+    between_dyads = total_dyads - within_dyads
+    p_within = logistic(alpha + eta)
+    p_between = logistic(alpha - eta / (K - 1))
+    return (within_dyads * p_within + between_dyads * p_between) / total_dyads
+end
+
+"""Solve for the SBM intercept that preserves a requested expected density."""
+function density_balanced_alpha(
+    target_density::Float64,
+    eta::Float64,
+    group_sizes::Vector{Int};
+    tol::Float64 = 1e-12
+)::Float64
+    0.0 < target_density < 1.0 || throw(ArgumentError("target_density must lie in (0, 1)"))
+    lo, hi = -30.0, 30.0
+    while hi - lo > tol
+        mid = (lo + hi) / 2
+        if expected_edge_density(mid, eta, group_sizes) < target_density
+            lo = mid
+        else
+            hi = mid
+        end
+    end
+    return (lo + hi) / 2
+end
 
 """
     generate_uniform_graph(N, p, rng) -> SimpleGraph

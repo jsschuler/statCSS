@@ -47,7 +47,7 @@ R0 = 0.0
 # Using log spacing for better resolution near smaller values.
 const BETA_GRID_MIN = 0.01
 const BETA_GRID_MAX = 4.0
-const BETA_GRID_N   = 400
+const BETA_GRID_N   = 2000
 const SIGMA_OBS     = 0.3
 
 beta_grid = exp.(range(log(BETA_GRID_MIN), log(BETA_GRID_MAX), length = BETA_GRID_N))

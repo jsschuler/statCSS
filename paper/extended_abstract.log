@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2026.1.26)  5 JUL 2026 13:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/Homebrew) (preloaded format=pdflatex 2026.1.26)  15 JUL 2026 13:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -553,75 +553,53 @@ File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 p/pdftex.map}]
 
 [2]
-
-[3]
-
-[4]
-<../figures/fig_03_posterior_bias_single.png, id=88, 677.53125pt x 406.51875pt>
-
-File: ../figures/fig_03_posterior_bias_single.png Graphic file (type png)
-<use ../figures/fig_03_posterior_bias_single.png>
-Package pdftex.def Info: ../figures/fig_03_posterior_bias_single.png  used on i
-nput line 231.
-(pdftex.def)             Requested size: 373.34943pt x 224.01399pt.
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<../figures/fig_04_more_data_shrinks_variance_not_bias.png, id=90, 677.53125pt 
+<../figures/fig_04_more_data_shrinks_variance_not_bias.png, id=68, 677.53125pt 
 x 511.9125pt>
 File: ../figures/fig_04_more_data_shrinks_variance_not_bias.png Graphic file (t
 ype png)
 <use ../figures/fig_04_more_data_shrinks_variance_not_bias.png>
 Package pdftex.def Info: ../figures/fig_04_more_data_shrinks_variance_not_bias.
-png  used on input line 252.
+png  used on input line 147.
 (pdftex.def)             Requested size: 373.34943pt x 282.09172pt.
 
-LaTeX Warning: `h' float specifier changed to `ht'.
 
-<../figures/fig_05_regularization_path_network_stats.png, id=91, 677.53125pt x 
-481.8pt>
-File: ../figures/fig_05_regularization_path_network_stats.png Graphic file (typ
-e png)
-<use ../figures/fig_05_regularization_path_network_stats.png>
-Package pdftex.def Info: ../figures/fig_05_regularization_path_network_stats.pn
-g  used on input line 283.
-(pdftex.def)             Requested size: 373.34943pt x 265.49808pt.
+[3]
 
-LaTeX Warning: `h' float specifier changed to `ht'.
-
+[4 <../figures/fig_04_more_data_shrinks_variance_not_bias.png>]
+<../figures/fig_08_network_uq_by_observation.png, id=82, 828.09375pt x 602.25pt
+>
+File: ../figures/fig_08_network_uq_by_observation.png Graphic file (type png)
+<use ../figures/fig_08_network_uq_by_observation.png>
+Package pdftex.def Info: ../figures/fig_08_network_uq_by_observation.png  used 
+on input line 173.
+(pdftex.def)             Requested size: 409.76732pt x 298.01817pt.
 
 
-[5]
+[5 <../figures/fig_08_network_uq_by_observation.png>]
 
-[6 <../figures/fig_03_posterior_bias_single.png>]
-
-[7 <../figures/fig_04_more_data_shrinks_variance_not_bias.png>]
-(./extended_abstract.bbl
+[6] (./extended_abstract.bbl
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmtt' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
+)
 
-
-[8 <../figures/fig_05_regularization_path_network_stats.png>])
-
-[9] (./extended_abstract.aux)
+[7] (./extended_abstract.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `extended_abstract.out' has not changed.
-(rerunfilecheck)             Checksum: 6EF87573EBA8BD7D33AE4AF451C88092;1366.
+(rerunfilecheck)             Checksum: 14AA46CC73FF0CFB904A2547E596AE48;1353.
  ) 
 Here is how much of TeX's memory you used:
- 12892 strings out of 473190
- 203187 string characters out of 5704335
- 643864 words of memory out of 5000000
- 35808 multiletter control sequences out of 15000+600000
- 574256 words of font info for 152 fonts, out of 8000000 for 9000
+ 12864 strings out of 473190
+ 202574 string characters out of 5704335
+ 639760 words of memory out of 5000000
+ 35796 multiletter control sequences out of 15000+600000
+ 573711 words of font info for 147 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,7n,79p,1014b,576s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,7n,79p,1014b,467s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmbx10.pfb></opt/homebrew/Cellar/texlive/20250308_1/share/texmf-dis
 t/fonts/type1/public/amsfonts/cm/cmbx12.pfb></opt/homebrew/Cellar/texlive/20250
@@ -638,10 +616,10 @@ f-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></opt/homebrew/Cellar/texlive/2
 0250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></opt/home
 brew/Cellar/texlive/20250308_1/share/texmf-dist/fonts/type1/public/amsfonts/cm/
 cmtt10.pfb>
-Output written on extended_abstract.pdf (9 pages, 515289 bytes).
+Output written on extended_abstract.pdf (7 pages, 445357 bytes).
 PDF statistics:
- 203 PDF objects out of 1000 (max. 8388607)
- 160 compressed objects within 2 object streams
- 37 named destinations out of 1000 (max. 500000)
- 35408 words of extra memory for PDF output out of 35830 (max. 10000000)
+ 174 PDF objects out of 1000 (max. 8388607)
+ 135 compressed objects within 2 object streams
+ 29 named destinations out of 1000 (max. 500000)
+ 33339 words of extra memory for PDF output out of 35830 (max. 10000000)
 
